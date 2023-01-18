@@ -127,5 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-/vocab.db
-/definitions.db
+
+# Sqlite databases
+/*.db
