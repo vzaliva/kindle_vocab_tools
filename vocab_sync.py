@@ -30,11 +30,11 @@ def resync(verbose, vocab_file, config_file, definitions_file):
                         
     db = sqlite3.connect(definitions_file)
     c = db.cursor()
-    c.execute("PRAGMA foreign_keys = ON")
     c.execute(
         '''
         CREATE TABLE IF NOT EXISTS DEFS (
           id TEXT PRIMARY KEY NOT NULL,
+          definition TEXT,
           pronunciation TEXT,
           pronunciation_url TEXT,
           source TEXT,
@@ -45,15 +45,6 @@ def resync(verbose, vocab_file, config_file, definitions_file):
         ''')
 
     db.commit()
-    c.execute(
-        '''
-        CREATE TABLE IF NOT EXISTS SENSES (
-          ord INTEGER DEFAULT 0,
-          text TEXT,
-          def_id TEXT,
-          FOREIGN KEY(def_id) REFERENCES DEFS(id)        
-        )
-        ''')
     
     db.execute("ATTACH DATABASE '%s' AS v" % vocab_file)
     if verbose:
