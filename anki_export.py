@@ -27,6 +27,13 @@ model = genanki.Model(
     },
   ])
 
+# Custom Note class using only word (without definition)
+# as GUID.
+class DictNote(genanki.Note):
+  @property
+  def guid(self):
+    return genanki.guid_for(self.fields[0])
+
 @click.command()
 @click.option('--verbose', is_flag=True)
 @click.option('--config-file', default="config.cfg", help='config.cfg file')
@@ -62,10 +69,6 @@ def anki_export(verbose, config_file, definitions_file, anki_file):
            language_code, word = full_id.split(':')
            if verbose:
                print ("Exporting %s" % word)
-               
-           note = genanki.Note(
-               model = model,
-               fields = [word, definition])
 
            fields = [html.escape(f) for f in [word, definition]]               
            note = DictNote(model = model, fields=fields)          
