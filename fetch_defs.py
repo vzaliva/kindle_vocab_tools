@@ -21,7 +21,18 @@ def fetch_definition(full_id):
         language_code, word = full_id.split(':')
         
         # Create the prompt for the OpenAI API
-        prompt = f"give me the dictionary definition of the word '{word}' in {language_code}"
+        prompt = f"""Give me the dictionary definition of the word
+        `{word}` in the language `{language_code}`. Do not say that
+        this is the definition, just the definition itself. If this
+        word is predominantly used in some English dialect (e.g.,
+        British or American), mention that. If there are several
+        meanings, enumerate them. If the word could be used as
+        different parts of speech (e.g., both verb and noun), say
+        that. If possible, give short usage examples (one short
+        sentence), preferably from literature, for all meanings and parts of
+        speech. Make it look like a brief, well-structured dictionary definition
+        that could fit on a mobile phone screen.
+        """
         
         # Call the OpenAI API using the gpt-4 model
         response =  openai.chat.completions.create(
@@ -42,9 +53,10 @@ def fetch_definition(full_id):
 
 @click.command()
 @click.option('--verbose', is_flag=True)
+@click.option('--force', is_flag=True, help='force re-fetching all definitions')
 @click.option('--config-file', default="config.cfg", help='config.cfg file')
 @click.option('--definitions-file', default="definitions.db", help='definitions data file')
-def fetch_defs(verbose, config_file, definitions_file):
+def fetch_defs(verbose, force, config_file, definitions_file):
 
     config = configparser.ConfigParser()
     config.read(config_file)
@@ -67,8 +79,12 @@ def fetch_defs(verbose, config_file, definitions_file):
         conn.execute('BEGIN')
 
         # Select IDs where definition_status = 0
-        cursor.execute("SELECT id FROM DEFS WHERE definition_status = 0")
-        ids_to_update = cursor.fetchall()
+        if force:
+            cursor.execute("SELECT id FROM DEFS")
+        else:
+            cursor.execute("SELECT id FROM DEFS WHERE definition_status = 0")
+
+            ids_to_update = cursor.fetchall()
         
         for id_tuple in ids_to_update:
             id = id_tuple[0]
