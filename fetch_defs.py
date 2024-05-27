@@ -29,10 +29,12 @@ def fetch_definition(full_id):
         meanings, enumerate them. If the word could be used as
         different parts of speech (e.g., both verb and noun), say
         that. If possible, give short usage examples (one short
-        sentence), preferably from literature, for all meanings and parts of
-        speech. Make it look like a brief, well-structured dictionary definition
-        that could fit on a mobile phone screen.
-        """
+        sentence), preferably from literature, for all meanings and
+        parts of speech. Make it look like a brief, well-structured
+        dictionary definition that could fit on a mobile phone
+        screen. Use basic HTML formatting to make it look as a brief
+        well structure dictionary definiton which could fit on mobile
+        phone screen in portrait mode. Do not explain HTML.  """
         
         # Call the OpenAI API using the gpt-4 model
         response =  openai.chat.completions.create(

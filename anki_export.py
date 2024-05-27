@@ -7,7 +7,6 @@ import click
 from icecream import ic
 import configparser
 import genanki
-import html
 
 # Unique ID of this model (schema)
 model_id=1684351491
@@ -70,9 +69,7 @@ def anki_export(verbose, config_file, definitions_file, anki_file):
            if verbose:
                print ("Exporting %s" % word)
 
-           fields = [html.escape(f) for f in [word, definition]]               
-           note = DictNote(model = model, fields=fields)          
-           
+           note = DictNote(model = model, fields=[word, definition])
            n = n + 1
            
            deck.add_note(note)
