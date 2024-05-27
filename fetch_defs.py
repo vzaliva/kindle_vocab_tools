@@ -84,7 +84,7 @@ def fetch_defs(verbose, force, config_file, definitions_file):
         else:
             cursor.execute("SELECT id FROM DEFS WHERE definition_status = 0")
 
-            ids_to_update = cursor.fetchall()
+        ids_to_update = cursor.fetchall()
         
         for id_tuple in ids_to_update:
             id = id_tuple[0]
